@@ -19,7 +19,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 public class LocalHttpClient {
 
-	protected static HttpClient httpClient = HttpClientFactory.createHttpClient(100, 10);
+	protected static HttpClient httpClient = HttpClientFactory.createHttpClient();
 
 	private static Map<String, HttpClient> httpClient_mchKeyStore = new HashMap<String, HttpClient>();
 
