@@ -47,40 +47,16 @@ public class HttpClientFactory {
 		return null;
 	}
 
-	public static HttpClient createHttpClient(int maxTotal, int maxPerRoute) {
-		try {
-			SSLContext sslContext = SSLContexts.custom().useSSL().build();
-			SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslContext,
-					SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-			PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
-			poolingHttpClientConnectionManager.setMaxTotal(maxTotal);
-			poolingHttpClientConnectionManager.setDefaultMaxPerRoute(maxPerRoute);
-			RequestConfig requestConfig = RequestConfig.custom()
-					.setConnectTimeout(HttpConst.CONNECTION_TIMEOUT)
-					.setSocketTimeout(HttpConst.SOCKET_TIMEOUT).build();
-			return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig)
-					.setConnectionManager(poolingHttpClientConnectionManager)
-					.setSSLSocketFactory(sf).build();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	/**
 	 * Key store 类型HttpClient
 	 * 
 	 * @param keystore
 	 * @param keyPassword
 	 * @param supportedProtocols
-	 * @param maxTotal
-	 * @param maxPerRoute
 	 * @return
 	 */
 	public static HttpClient createKeyMaterialHttpClient(KeyStore keystore, String keyPassword,
-			String[] supportedProtocols, int maxTotal, int maxPerRoute) {
+			String[] supportedProtocols) {
 		try {
 
 			SSLContext sslContext = SSLContexts.custom().useSSL()
@@ -88,11 +64,10 @@ public class HttpClientFactory {
 			SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslContext,
 					supportedProtocols, null,
 					SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-			PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
-			poolingHttpClientConnectionManager.setMaxTotal(maxTotal);
-			poolingHttpClientConnectionManager.setDefaultMaxPerRoute(maxPerRoute);
-			return HttpClientBuilder.create()
-					.setConnectionManager(poolingHttpClientConnectionManager)
+			RequestConfig requestConfig = RequestConfig.custom()
+					.setConnectTimeout(HttpConst.CONNECTION_TIMEOUT)
+					.setSocketTimeout(HttpConst.SOCKET_TIMEOUT).build();
+			return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig)
 					.setSSLSocketFactory(sf).build();
 		} catch (KeyManagementException e) {
 			e.printStackTrace();

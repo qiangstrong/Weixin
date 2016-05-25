@@ -23,10 +23,6 @@ public class LocalHttpClient {
 
 	private static Map<String, HttpClient> httpClient_mchKeyStore = new HashMap<String, HttpClient>();
 
-	public static void init(int maxTotal, int maxPerRoute) {
-		httpClient = HttpClientFactory.createHttpClient(maxTotal, maxPerRoute);
-	}
-
 	/**
 	 * 初始化 MCH HttpClient KeyStore
 	 * 
@@ -35,18 +31,15 @@ public class LocalHttpClient {
 	 * @param keyStoreFilePath
 	 *            私钥文件路径
 	 * @param mch_id
-	 * @param maxTotal
-	 * @param maxPerRoute
 	 */
-	public static void initMchKeyStore(String keyStoreName, String keyStoreFilePath, String mch_id,
-			int maxTotal, int maxPerRoute) {
+	public static void initMchKeyStore(String keyStoreName, String keyStoreFilePath, String mch_id) {
 		try {
 			KeyStore keyStore = KeyStore.getInstance(keyStoreName);
 			FileInputStream instream = new FileInputStream(new File(keyStoreFilePath));
 			keyStore.load(instream, mch_id.toCharArray());
 			instream.close();
 			HttpClient httpClient = HttpClientFactory.createKeyMaterialHttpClient(keyStore, mch_id,
-					new String[] { "TLSv1" }, maxTotal, maxPerRoute);
+					new String[] { "TLSv1" });
 			httpClient_mchKeyStore.put(mch_id, httpClient);
 		} catch (KeyStoreException e) {
 			e.printStackTrace();
